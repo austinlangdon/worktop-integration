@@ -1,4 +1,4 @@
-const _sharedBaseUrl = 'https://auth-json-server.zapier-staging.com';
+const _sharedBaseUrl = 'https://api.worktop.io/v1';
 
 const getTask = (z, bundle) => {
   return z
@@ -24,9 +24,7 @@ const createTask = (z, bundle) => {
     url: _sharedBaseUrl + '/tasks',
     method: 'POST',
     body: {
-      name: bundle.inputData.name,
-      directions: bundle.inputData.directions,
-      authorId: bundle.inputData.authorId,
+      task_type_id: bundle.inputData.task_type_id,
     },
     headers: {
       'content-type': 'application/json',
