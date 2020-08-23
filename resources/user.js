@@ -61,12 +61,17 @@ const searchUser = (z, bundle) => {
 };
 
 const sample = {
-  id: 1,
-  createdAt: 1472069465,
-  name: 'Best Spagetti Ever',
-  authorId: 1,
-  directions: '1. Boil Noodles\n2.Serve with sauce',
-  style: 'italian',
+  _id: '5f3d7b6b142d2f006c9f7b4d',
+  first_name: 'Austin',
+  last_name: 'Langdon',
+  full_name: 'Austin Langdon',
+  email: 'austin@phoenixseolab.com',
+  is_deleted: false,
+  source: 'ui',
+  date_created: '2020-08-16T19:43:10.376Z',
+  created_by: '5f1a022e5bebda0046515ffa',
+  date_updated: '2020-08-23T19:51:47.102Z',
+  updated_by: '5f1a022e5bebda0046515ffa',
 };
 
 // This file exports a User resource. The definition below contains all of the keys available,

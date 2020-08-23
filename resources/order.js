@@ -61,12 +61,22 @@ const searchOrder = (z, bundle) => {
 };
 
 const sample = {
-  id: 1,
-  createdAt: 1472069465,
-  name: 'Best Spagetti Ever',
-  authorId: 1,
-  directions: '1. Boil Noodles\n2.Serve with sauce',
-  style: 'italian',
+  _id: '5f3d7b6b142d2f006c9f7b4d',
+  workspace_id: '5f1a022e5bebda0046515ffb',
+  account_id: '5f398c4e1ea233020ff9cd3c',
+  confidence: 50,
+  contact_id: '',
+  'custom:5f36cd873eca5a003cb153ff': ['Client'],
+  description: '',
+  line_items: [],
+  status_id: '5f1a022e5bebda004651600d',
+  user_id: '5f1a022e5bebda0046515ffa',
+  is_deleted: false,
+  source: 'ui',
+  date_created: '2020-08-16T19:43:10.376Z',
+  created_by: '5f1a022e5bebda0046515ffa',
+  date_updated: '2020-08-23T19:51:47.102Z',
+  updated_by: '5f1a022e5bebda0046515ffa',
 };
 
 // This file exports a Order resource. The definition below contains all of the keys available,
