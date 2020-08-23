@@ -1,17 +1,17 @@
 const _sharedBaseUrl = 'https://api.worktop.io/v1';
 
-const getTask = (z, bundle) => {
+const getUser = (z, bundle) => {
   return z
     .request({
-      url: `${_sharedBaseUrl}/tasks/${bundle.inputData.id}`,
+      url: `${_sharedBaseUrl}/users/${bundle.inputData.id}`,
     })
-    .then(response => response.data);
+    .then(response => response.data.data);
 };
 
-const listTasks = (z, bundle) => {
+const listUsers = (z, bundle) => {
   return z
     .request({
-      url: _sharedBaseUrl + '/tasks',
+      url: _sharedBaseUrl + '/users',
       params: {
         style: bundle.inputData.style,
       },
@@ -25,35 +25,35 @@ const listTasks = (z, bundle) => {
     });
 };
 
-const createTask = (z, bundle) => {
+const createUser = (z, bundle) => {
   const requestOptions = {
-    url: _sharedBaseUrl + '/tasks',
+    url: _sharedBaseUrl + '/users',
     method: 'POST',
     body: {
-      task_type_id: bundle.inputData.task_type_id,
+      user_id: bundle.inputData.user_id,
     },
     headers: {
       'content-type': 'application/json',
     },
   };
 
-  return z.request(requestOptions).then(response => response.data);
+  return z.request(requestOptions).then(response => response.data.data);
 };
 
-const searchTask = (z, bundle) => {
+const searchUser = (z, bundle) => {
   return z
     .request({
-      url: _sharedBaseUrl + '/tasks',
+      url: _sharedBaseUrl + '/users',
       params: {
         nameSearch: bundle.inputData.name,
       },
     })
     .then(response => {
-      const matchingTasks = response.data;
+      const matchingUsers = response.data.data;
 
-      // Only return the first matching task
-      if (matchingTasks && matchingTasks.length) {
-        return [matchingTasks[0]];
+      // Only return the first matching user
+      if (matchingUsers && matchingUsers.length) {
+        return [matchingUsers[0]];
       }
 
       return [];
@@ -61,7 +61,7 @@ const searchTask = (z, bundle) => {
 };
 
 const sample = {
-  _id: 1,
+  id: 1,
   createdAt: 1472069465,
   name: 'Best Spagetti Ever',
   authorId: 1,
@@ -69,30 +69,30 @@ const sample = {
   style: 'italian',
 };
 
-// This file exports a Task resource. The definition below contains all of the keys available,
+// This file exports a User resource. The definition below contains all of the keys available,
 // and implements the list and create methods.
 module.exports = {
-  key: 'task',
-  noun: 'Task',
+  key: 'user',
+  noun: 'User',
   // The get method is used by Zapier to fetch a complete representation of a record. This is helpful when the HTTP
   // response from a create call only return an ID, or a search that only returns a minimuml representation of the
   // record. Zapier will follow these up with the get() to retrieve the entire object.
   get: {
     display: {
-      label: 'Get Task',
-      description: 'Gets a task.',
+      label: 'Get User',
+      description: 'Gets a user.',
     },
     operation: {
       inputFields: [{ key: 'id', required: true }],
-      perform: getTask,
+      perform: getUser,
       sample: sample,
     },
   },
   // The list method on this resource becomes a Trigger on the app. Zapier will use polling to watch for new records
   list: {
     display: {
-      label: 'New Task',
-      description: 'Trigger when a new task is added.',
+      label: 'New User',
+      description: 'Trigger when a new user is added.',
     },
     operation: {
       inputFields: [
@@ -102,7 +102,7 @@ module.exports = {
           helpText: 'Explain what style of cuisine this is.',
         },
       ],
-      perform: listTasks,
+      perform: listUsers,
       sample: sample,
     },
   },
@@ -115,102 +115,38 @@ module.exports = {
   // The create method on this resource becomes a Write on this app
   create: {
     display: {
-      label: 'Create Task',
-      description: 'Creates a new task.',
+      label: 'Create User',
+      description: 'Creates a new user.',
     },
     operation: {
       inputFields: [
-        {
-          key: 'parent_object_type',
-          label: 'Parent Object Type',
-          required: false,
-          choices: ['Account', 'Order', 'List'],
-          altersDynamicFields: true,
-          helpText: 'The object type this task is related to.',
-        },
-        function(z, bundle) {
-          if (bundle.inputData.parent_object_type === 'Account') {
-            return [
-              {
-                key: 'parent_object_id',
-                label: 'Account',
-                required: true,
-                type: 'string',
-                dynamic: 'accountList._id.name',
-                helpText: 'The account this task is related to.',
-              },
-            ];
-          } else if (bundle.inputData.parent_object_type === 'Order') {
-            return [
-              {
-                key: 'parent_object_id',
-                label: 'Order',
-                required: true,
-                type: 'string',
-                dynamic: 'orderList._id.name',
-                helpText: 'The order this task is related to.',
-              },
-            ];
-          } else if (bundle.inputData.parent_object_type === 'List') {
-            return [
-              {
-                key: 'parent_object_id',
-                label: 'List',
-                required: true,
-                type: 'string',
-                dynamic: 'listList._id.name',
-                helpText: 'The list this task is related to.',
-              },
-            ];
-          }
-          return [];
-        },
         { key: 'name', required: false, type: 'string' },
         {
-          key: 'task_type_id',
-          label: 'Task Type',
+          key: 'authorId',
+          required: true,
+          type: 'integer',
+          label: 'Author ID',
+        },
+        {
+          key: 'style',
           required: false,
           type: 'string',
-          dynamic: 'taskTypeList._id.name',
-          helpText: 'Explain how should one make the task, step by step.',
-        },
-        {
-          key: 'description',
-          required: false,
-          type: 'text',
-        },
-        {
-          key: 'user_id',
-          label: 'Assignee',
-          required: false,
-          type: 'string',
-          dynamic: 'userList._id.first_name',
-          helpText: 'Explain how should one make the task, step by step.',
-        },
-        {
-          key: 'start_date',
-          required: false,
-          type: 'datetime',
-        },
-        {
-          key: 'due_date',
-          required: false,
-          type: 'datetime',
+          helpText: 'Explain what style of cuisine this is.',
         },
       ],
-      perform: createTask,
+      perform: createUser,
       sample: sample,
     },
   },
   // The search method on this resource becomes a Search on this app
   search: {
     display: {
-      label: 'Find Task',
-      description: 'Finds an existing task by name.',
+      label: 'Find User',
+      description: 'Finds an existing user by name.',
     },
     operation: {
       inputFields: [{ key: 'name', required: true, type: 'string' }],
-      perform: searchTask,
+      perform: searchUser,
       sample: sample,
     },
   },
