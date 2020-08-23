@@ -5,8 +5,7 @@
 // By returning the entire request object, you have access to the request and
 // response data for testing purposes. Your connection label can access any data
 // from the returned response using the `json.` prefix. eg: `{{json.username}}`.
-const test = (z, bundle) =>
-  z.request({ url: 'https://api.worktop.io/v1/me' });
+const test = (z, bundle) => z.request({ url: 'https://api.worktop.io/v1/me' });
 
 // This function runs after every outbound request. You can use it to check for
 // errors or modify the response. You can have as many as you need. They'll need
@@ -17,7 +16,7 @@ const handleBadResponses = (response, z, bundle) => {
       // This message is surfaced to the user
       'The API Key you supplied is incorrect',
       'AuthenticationError',
-      response.status
+      response.status,
     );
   }
 
