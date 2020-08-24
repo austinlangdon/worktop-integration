@@ -1,3 +1,4 @@
+const { normalizeCustomFields, getParentObjectField } = require('../utils');
 const _sharedBaseUrl = 'https://api.worktop.io/v1';
 
 const getTask = (z, bundle) => {
@@ -90,6 +91,11 @@ const sample = {
   created_by_name: 'Austin Langdon',
   date_updated: '2020-08-23T19:51:47.102Z',
   updated_by: '5f1a022e5bebda0046515ffa',
+};
+
+const getCustomInputFields = async (z, bundle) => {
+  const response = await z.request(`${_sharedBaseUrl}/custom_fields?type=task`);
+  return normalizeCustomFields(response.data.data);
 };
 
 // This file exports a Task resource. The definition below contains all of the keys available,
@@ -220,6 +226,7 @@ module.exports = {
           required: false,
           type: 'datetime',
         },
+        getCustomInputFields,
       ],
       perform: createTask,
       sample: sample,

@@ -1,18 +1,17 @@
-const { normalizeCustomFields, getParentObjectField } = require('../utils');
 const _sharedBaseUrl = 'https://api.worktop.io/v1';
 
-const getOrder = (z, bundle) => {
+const getCustomField = (z, bundle) => {
   return z
     .request({
-      url: `${_sharedBaseUrl}/orders/${bundle.inputData.id}`,
+      url: `${_sharedBaseUrl}/custom_fields/${bundle.inputData.id}`,
     })
     .then(response => response.data.data);
 };
 
-const listOrders = (z, bundle) => {
+const listCustomFields = (z, bundle) => {
   return z
     .request({
-      url: _sharedBaseUrl + '/orders',
+      url: _sharedBaseUrl + '/custom_fields',
       params: {
         style: bundle.inputData.style,
       },
@@ -26,12 +25,12 @@ const listOrders = (z, bundle) => {
     });
 };
 
-const createOrder = (z, bundle) => {
+const createCustomField = (z, bundle) => {
   const requestOptions = {
-    url: _sharedBaseUrl + '/orders',
+    url: _sharedBaseUrl + '/custom_fields',
     method: 'POST',
     body: {
-      order_id: bundle.inputData.order_id,
+      customField_id: bundle.inputData.customField_id,
     },
     headers: {
       'content-type': 'application/json',
@@ -41,20 +40,20 @@ const createOrder = (z, bundle) => {
   return z.request(requestOptions).then(response => response.data.data);
 };
 
-const searchOrder = (z, bundle) => {
+const searchCustomField = (z, bundle) => {
   return z
     .request({
-      url: _sharedBaseUrl + '/orders',
+      url: _sharedBaseUrl + '/custom_fields',
       params: {
         nameSearch: bundle.inputData.name,
       },
     })
     .then(response => {
-      const matchingOrders = response.data.data;
+      const matchingCustomFields = response.data.data;
 
-      // Only return the first matching user
-      if (matchingOrders && matchingOrders.length) {
-        return [matchingOrders[0]];
+      // Only return the first matching customField
+      if (matchingCustomFields && matchingCustomFields.length) {
+        return [matchingCustomFields[0]];
       }
 
       return [];
@@ -63,15 +62,8 @@ const searchOrder = (z, bundle) => {
 
 const sample = {
   _id: '5f3d7b6b142d2f006c9f7b4d',
-  workspace_id: '5f1a022e5bebda0046515ffb',
-  account_id: '5f398c4e1ea233020ff9cd3c',
-  confidence: 50,
-  contact_id: '',
-  'custom:5f36cd873eca5a003cb153ff': ['Client'],
-  description: '',
-  line_items: [],
-  status_id: '5f1a022e5bebda004651600d',
-  user_id: '5f1a022e5bebda0046515ffa',
+  for: 'task',
+  name: 'Content Type',
   is_deleted: false,
   source: 'ui',
   date_created: '2020-08-16T19:43:10.376Z',
@@ -80,35 +72,30 @@ const sample = {
   updated_by: '5f1a022e5bebda0046515ffa',
 };
 
-const getCustomInputFields = async (z, bundle) => {
-  const response = await z.request(`${_sharedBaseUrl}/custom_fields?type=order`);
-  return normalizeCustomFields(response.data.data);
-};
-
-// This file exports a Order resource. The definition below contains all of the keys available,
-// and implements the list and create methods.
+// This file exports a CustomField resource. The definition below contains all of the keys available,
+// and implements the customField and create methods.
 module.exports = {
-  key: 'order',
-  noun: 'Order',
+  key: 'customField',
+  noun: 'Custom Field',
   // The get method is used by Zapier to fetch a complete representation of a record. This is helpful when the HTTP
   // response from a create call only return an ID, or a search that only returns a minimuml representation of the
   // record. Zapier will follow these up with the get() to retrieve the entire object.
   get: {
     display: {
-      label: 'Get Order',
-      description: 'Gets a order.',
+      label: 'Get Custom Field',
+      description: 'Gets a custom field.',
     },
     operation: {
       inputFields: [{ key: 'id', required: true }],
-      perform: getOrder,
+      perform: getCustomField,
       sample: sample,
     },
   },
   // The list method on this resource becomes a Trigger on the app. Zapier will use polling to watch for new records
   list: {
     display: {
-      label: 'New Order',
-      description: 'Trigger when a new order is added.',
+      label: 'New Custom Field',
+      description: 'Trigger when a new custom field is added.',
     },
     operation: {
       inputFields: [
@@ -118,7 +105,7 @@ module.exports = {
           helpText: 'Explain what style of cuisine this is.',
         },
       ],
-      perform: listOrders,
+      perform: listCustomFields,
       sample: sample,
     },
   },
@@ -131,24 +118,38 @@ module.exports = {
   // The create method on this resource becomes a Write on this app
   create: {
     display: {
-      label: 'Create Order',
-      description: 'Creates a new order.',
+      label: 'Create Custom Field',
+      description: 'Creates a new custom field.',
     },
     operation: {
-      inputFields: [{ key: 'name', required: false, type: 'string' }, getCustomInputFields],
-      perform: createOrder,
+      inputFields: [
+        { key: 'name', required: false, type: 'string' },
+        {
+          key: 'authorId',
+          required: true,
+          type: 'integer',
+          label: 'Author ID',
+        },
+        {
+          key: 'style',
+          required: false,
+          type: 'string',
+          helpText: 'Explain what style of cuisine this is.',
+        },
+      ],
+      perform: createCustomField,
       sample: sample,
     },
   },
   // The search method on this resource becomes a Search on this app
   search: {
     display: {
-      label: 'Find Order',
-      description: 'Finds an existing order by name.',
+      label: 'Find Custom Field',
+      description: 'Finds an existing custom field by name.',
     },
     operation: {
       inputFields: [{ key: 'name', required: true, type: 'string' }],
-      perform: searchOrder,
+      perform: searchCustomField,
       sample: sample,
     },
   },

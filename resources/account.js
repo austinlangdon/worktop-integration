@@ -1,3 +1,4 @@
+const { normalizeCustomFields, getParentObjectField } = require('../utils');
 const _sharedBaseUrl = 'https://api.worktop.io/v1';
 
 const getAccount = (z, bundle) => {
@@ -77,6 +78,11 @@ const sample = {
   updated_by: '5f1a022e5bebda0046515ffa',
 };
 
+const getCustomInputFields = async (z, bundle) => {
+  const response = await z.request(`${_sharedBaseUrl}/custom_fields?type=account`);
+  return normalizeCustomFields(response.data.data);
+};
+
 // This file exports a Account resource. The definition below contains all of the keys available,
 // and implements the list and create methods.
 module.exports = {
@@ -127,21 +133,7 @@ module.exports = {
       description: 'Creates a new account.',
     },
     operation: {
-      inputFields: [
-        { key: 'name', required: false, type: 'string' },
-        {
-          key: 'authorId',
-          required: true,
-          type: 'integer',
-          label: 'Author ID',
-        },
-        {
-          key: 'style',
-          required: false,
-          type: 'string',
-          helpText: 'Explain what style of cuisine this is.',
-        },
-      ],
+      inputFields: [{ key: 'name', required: false, type: 'string' }, getCustomInputFields],
       perform: createAccount,
       sample: sample,
     },
