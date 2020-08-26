@@ -153,12 +153,12 @@ module.exports = {
           key: 'parent_object_type',
           label: 'Parent Object Type',
           required: false,
-          choices: ['Account', 'Order', 'List'],
+          choices: { account: 'Account', order: 'Order', list: 'List' },
           altersDynamicFields: true,
           helpText: 'The object type this task is related to.',
         },
         function(z, bundle) {
-          if (bundle.inputData.parent_object_type === 'Account') {
+          if (bundle.inputData.parent_object_type === 'account') {
             return [
               {
                 key: 'parent_object_id',
@@ -169,7 +169,7 @@ module.exports = {
                 helpText: 'The account this task is related to.',
               },
             ];
-          } else if (bundle.inputData.parent_object_type === 'Order') {
+          } else if (bundle.inputData.parent_object_type === 'order') {
             return [
               {
                 key: 'parent_object_id',
@@ -180,7 +180,7 @@ module.exports = {
                 helpText: 'The order this task is related to.',
               },
             ];
-          } else if (bundle.inputData.parent_object_type === 'List') {
+          } else if (bundle.inputData.parent_object_type === 'list') {
             return [
               {
                 key: 'parent_object_id',

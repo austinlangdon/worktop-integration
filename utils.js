@@ -3,19 +3,19 @@ const normalizeCustomFields = async customFields => {
   for (const field of customFields) {
     let type, choices, dynamic, list;
 
-    if (field.type === 'number') {
+    if (field.field_type === 'number') {
       type = 'number';
-    } else if (field.type === 'text') {
+    } else if (field.field_type === 'text') {
       type = 'string';
-    } else if (field.type === 'datetime') {
+    } else if (field.field_type === 'datetime') {
       type = 'datetime';
-    } else if (field.type === 'datetime' || field.type === 'date') {
+    } else if (field.field_type === 'datetime' || field.field_type === 'date') {
       type = 'datetime';
-    } else if (field.type === 'choices') {
+    } else if (field.field_type === 'choices') {
       type = 'string';
       choices = field.choices;
       list = field.accepts_multiple_values;
-    } else if (field.type === 'user') {
+    } else if (field.field_type === 'user') {
       type = 'string';
       dynamic = 'userList._id.first_name';
       list = field.accepts_multiple_values;
