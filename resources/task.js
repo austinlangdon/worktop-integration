@@ -6,7 +6,11 @@ const getTask = (z, bundle) => {
     .request({
       url: `${_sharedBaseUrl}/tasks/${bundle.inputData.id}`,
     })
-    .then(response => response.data);
+    .then(response => {
+      const item = response.data.data;
+      item.id = item._id;
+      return item;
+    });
 };
 
 const listTasks = (z, bundle) => {
@@ -38,7 +42,11 @@ const createTask = (z, bundle) => {
     },
   };
 
-  return z.request(requestOptions).then(response => response.data);
+  return z.request(requestOptions).then(response => {
+    const item = response.data.data;
+    item.id = item._id;
+    return item;
+  });
 };
 
 const searchTask = (z, bundle) => {
@@ -112,7 +120,7 @@ module.exports = {
       description: 'Gets a task.',
     },
     operation: {
-      inputFields: [{ key: 'id', required: true }],
+      inputFields: [{ key: '_id', required: true }],
       perform: getTask,
       sample: sample,
     },
