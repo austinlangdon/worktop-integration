@@ -9,6 +9,9 @@ const Order = require('./resources/order');
 const List = require('./resources/list');
 const Attachment = require('./resources/attachment');
 
+const taskUpdate = require('./creates/taskUpdate');
+const driveFileCopy = require('./creates/driveFileCopy');
+
 module.exports = {
   // This is just shorthand to reference the installed dependencies you have.
   // Zapier will need to know these before we can upload.
@@ -28,7 +31,10 @@ module.exports = {
   searches: {},
 
   // If you want your creates to show up, you better include it here!
-  creates: {},
+  creates: {
+    [taskUpdate.key]: taskUpdate,
+    [driveFileCopy.key]: driveFileCopy,
+  },
 
   resources: {
     [Task.key]: Task,

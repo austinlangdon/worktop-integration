@@ -5,7 +5,11 @@ const getAttachment = (z, bundle) => {
     .request({
       url: `${_sharedBaseUrl}/attachments/${bundle.inputData.id}`,
     })
-    .then(response => response.data);
+    .then(response => {
+      const attachment = response.data.data;
+      attachment.id = attachment._id;
+      return attachment;
+    });
 };
 
 const listAttachments = (z, bundle) => {
@@ -17,8 +21,8 @@ const listAttachments = (z, bundle) => {
       },
     })
     .then(response => {
-      const items = response.data.data;
-      return items.map(item => {
+      const attachments = response.data.data;
+      return attachments.map(item => {
         item.id = item._id;
         return item;
       });
@@ -164,7 +168,6 @@ module.exports = {
     { key: '_id', label: 'ID' },
     { key: 'workspace_id', label: 'Workspace ID' },
     { key: 'name', label: 'Name' },
-    { key: 'url', label: 'URL' },
     { key: 'date_created', label: 'Date Created' },
     { key: 'date_updated', label: 'Date Updated' },
     { key: 'created_by', label: 'Created By' },
