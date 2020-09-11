@@ -1,11 +1,13 @@
 const { config: authentication, befores = [], afters = [] } = require('./authentication');
 
+// resources
 const Task = require('./resources/task');
 const TaskType = require('./resources/taskType');
 const User = require('./resources/user');
 const Account = require('./resources/account');
 const Order = require('./resources/order');
 const List = require('./resources/list');
+const Attachment = require('./resources/attachment');
 
 module.exports = {
   // This is just shorthand to reference the installed dependencies you have.
@@ -35,5 +37,6 @@ module.exports = {
     [Account.key]: Account,
     [Order.key]: Order,
     [List.key]: List,
+    [Attachment.key]: Attachment,
   },
 };
