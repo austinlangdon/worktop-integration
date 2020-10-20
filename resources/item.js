@@ -104,7 +104,11 @@ const sample = {
 };
 
 const getCustomInputFields = async (z, bundle) => {
-  const response = await z.request(`${_sharedBaseUrl}/custom_fields`);
+  if (!bundle.inputData.item_type_id) return [];
+
+  const response = await z.request(
+    `${_sharedBaseUrl}/custom_fields?item_type_id=${bundle.inputData.item_type_id}`,
+  );
   return normalizeCustomFields(response.data.data);
 };
 
