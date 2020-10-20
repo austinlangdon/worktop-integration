@@ -1,15 +1,11 @@
 const { config: authentication, befores = [], afters = [] } = require('./authentication');
 
 // resources
-const Task = require('./resources/task');
-const TaskType = require('./resources/taskType');
+const Item = require('./resources/item');
+const ItemType = require('./resources/itemType');
 const User = require('./resources/user');
-const Account = require('./resources/account');
-const Order = require('./resources/order');
-const List = require('./resources/list');
 const Attachment = require('./resources/attachment');
-
-const taskUpdate = require('./creates/taskUpdate');
+const itemUpdate = require('./creates/itemUpdate');
 const driveFileCopy = require('./creates/driveFileCopy');
 
 module.exports = {
@@ -32,17 +28,14 @@ module.exports = {
 
   // If you want your creates to show up, you better include it here!
   creates: {
-    [taskUpdate.key]: taskUpdate,
+    [itemUpdate.key]: itemUpdate,
     [driveFileCopy.key]: driveFileCopy,
   },
 
   resources: {
-    [Task.key]: Task,
-    [TaskType.key]: TaskType,
+    [Item.key]: Item,
+    [ItemType.key]: ItemType,
     [User.key]: User,
-    [Account.key]: Account,
-    [Order.key]: Order,
-    [List.key]: List,
     [Attachment.key]: Attachment,
   },
 };
