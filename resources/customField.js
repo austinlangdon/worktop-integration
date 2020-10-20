@@ -62,7 +62,6 @@ const searchCustomField = (z, bundle) => {
 
 const sample = {
   _id: '5f3d7b6b142d2f006c9f7b4d',
-  for: 'task',
   name: 'Content Type',
   is_deleted: false,
   source: 'ui',

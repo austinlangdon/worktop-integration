@@ -2,33 +2,33 @@ const _sharedBaseUrl = 'https://api.worktop.io/v1';
 const { normalizeCustomFields } = require('../utils');
 
 const getCustomInputFields = async (z, bundle) => {
-  const response = await z.request(`${_sharedBaseUrl}/custom_fields?type=task`);
+  const response = await z.request(`${_sharedBaseUrl}/custom_fields?type=item`);
   return normalizeCustomFields(response.data.data);
 };
 
 // We recommend writing your creates separate like this and rolling them
 // into the App definition at the end.
 module.exports = {
-  key: 'taskUpdate',
+  key: 'itemUpdate',
 
   // You'll want to provide some helpful display labels and descriptions
   // for users. Zapier will put them into the UX.
-  noun: 'Task',
+  noun: 'Item',
   display: {
-    label: 'Update Task',
-    description: 'Updates a task.',
+    label: 'Update Item',
+    description: 'Updates a item.',
   },
 
   // `operation` is where the business logic goes.
   operation: {
     inputFields: [
       {
-        key: 'task_id',
-        label: 'Task',
+        key: 'item_id',
+        label: 'Item',
         required: true,
         type: 'string',
-        dynamic: 'taskList._id.name',
-        helpText: 'Pick a task to update.',
+        dynamic: 'itemList._id.name',
+        helpText: 'Pick a item to update.',
       },
       {
         key: 'parent_object_type',
@@ -36,7 +36,7 @@ module.exports = {
         required: false,
         choices: { account: 'Account', order: 'Order', list: 'List' },
         altersDynamicFields: true,
-        helpText: 'The object type this task is related to.',
+        helpText: 'The object type this item is related to.',
       },
       function(z, bundle) {
         if (bundle.inputData.parent_object_type === 'account') {
@@ -47,7 +47,7 @@ module.exports = {
               required: true,
               type: 'string',
               dynamic: 'accountList._id.name',
-              helpText: 'The account this task is related to.',
+              helpText: 'The account this item is related to.',
             },
           ];
         } else if (bundle.inputData.parent_object_type === 'order') {
@@ -58,7 +58,7 @@ module.exports = {
               required: true,
               type: 'string',
               dynamic: 'orderList._id.name',
-              helpText: 'The order this task is related to.',
+              helpText: 'The order this item is related to.',
             },
           ];
         } else if (bundle.inputData.parent_object_type === 'list') {
@@ -69,7 +69,7 @@ module.exports = {
               required: true,
               type: 'string',
               dynamic: 'listList._id.name',
-              helpText: 'The list this task is related to.',
+              helpText: 'The list this item is related to.',
             },
           ];
         }
@@ -77,12 +77,12 @@ module.exports = {
       },
       { key: 'name', required: false, type: 'string' },
       {
-        key: 'task_type_id',
-        label: 'Task Type',
+        key: 'item_type_id',
+        label: 'Item Type',
         required: false,
         type: 'string',
-        dynamic: 'taskTypeList._id.name',
-        helpText: 'Explain how should one make the task, step by step.',
+        dynamic: 'itemTypeList._id.name',
+        helpText: 'Explain how should one make the item, step by step.',
       },
       {
         key: 'description',
@@ -95,7 +95,7 @@ module.exports = {
         required: false,
         type: 'string',
         dynamic: 'userList._id.first_name',
-        helpText: 'Explain how should one make the task, step by step.',
+        helpText: 'Explain how should one make the item, step by step.',
       },
       {
         key: 'start_date',
@@ -111,7 +111,7 @@ module.exports = {
     ],
     perform: (z, bundle) => {
       const promise = z.request({
-        url: `${_sharedBaseUrl}/tasks/${bundle.inputData.task_id}`,
+        url: `${_sharedBaseUrl}/items/${bundle.inputData.item_id}`,
         method: 'POST',
         body: {
           name: bundle.inputData.name,
@@ -156,8 +156,8 @@ module.exports = {
       start_date: null,
       status_id: '5f1a022e5bebda0046516016',
       status_type: 'Active',
-      task_type_id: '5f1a022e5bebda0046515fff',
-      task_type_name: 'Task',
+      item_type_id: '5f1a022e5bebda0046515fff',
+      item_type_name: 'Item',
       is_deleted: false,
       source: 'ui',
       date_created: '2020-08-16T19:43:10.376Z',

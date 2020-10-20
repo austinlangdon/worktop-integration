@@ -1,17 +1,17 @@
 const _sharedBaseUrl = 'https://api.worktop.io/v1';
 
-const getTaskType = (z, bundle) => {
+const getItemType = (z, bundle) => {
   return z
     .request({
-      url: `${_sharedBaseUrl}/task_types/${bundle.inputData.id}`,
+      url: `${_sharedBaseUrl}/item_types/${bundle.inputData.id}`,
     })
     .then(response => response.data);
 };
 
-const listTaskTypes = (z, bundle) => {
+const listItemTypes = (z, bundle) => {
   return z
     .request({
-      url: _sharedBaseUrl + '/task_types',
+      url: _sharedBaseUrl + '/item_types',
       params: {
         style: bundle.inputData.style,
       },
@@ -25,12 +25,12 @@ const listTaskTypes = (z, bundle) => {
     });
 };
 
-const createTaskType = (z, bundle) => {
+const createItemType = (z, bundle) => {
   const requestOptions = {
-    url: _sharedBaseUrl + '/task_types',
+    url: _sharedBaseUrl + '/item_types',
     method: 'POST',
     body: {
-      task_type_id: bundle.inputData.task_type_id,
+      item_type_id: bundle.inputData.item_type_id,
     },
     headers: {
       'content-type': 'application/json',
@@ -40,20 +40,20 @@ const createTaskType = (z, bundle) => {
   return z.request(requestOptions).then(response => response.data);
 };
 
-const searchTaskTypes = (z, bundle) => {
+const searchItemTypes = (z, bundle) => {
   return z
     .request({
-      url: _sharedBaseUrl + '/task_types',
+      url: _sharedBaseUrl + '/item_types',
       params: {
         nameSearch: bundle.inputData.name,
       },
     })
     .then(response => {
-      const matchingTasks = response.data;
+      const matchingItems = response.data;
 
-      // Only return the first matching task
-      if (matchingTasks && matchingTasks.length) {
-        return [matchingTasks[0]];
+      // Only return the first matching item
+      if (matchingItems && matchingItems.length) {
+        return [matchingItems[0]];
       }
 
       return [];
@@ -69,30 +69,30 @@ const sample = {
   style: 'italian',
 };
 
-// This file exports a Task resource. The definition below contains all of the keys available,
+// This file exports a Item resource. The definition below contains all of the keys available,
 // and implements the list and create methods.
 module.exports = {
-  key: 'taskType',
-  noun: 'Task Type',
+  key: 'itemType',
+  noun: 'Item Type',
   // The get method is used by Zapier to fetch a complete representation of a record. This is helpful when the HTTP
   // response from a create call only return an ID, or a search that only returns a minimuml representation of the
   // record. Zapier will follow these up with the get() to retrieve the entire object.
   get: {
     display: {
-      label: 'Get Task Type',
-      description: 'Gets a task type.',
+      label: 'Get Item Type',
+      description: 'Gets a item type.',
     },
     operation: {
       inputFields: [{ key: 'id', required: true }],
-      perform: getTaskType,
+      perform: getItemType,
       sample: sample,
     },
   },
   // The list method on this resource becomes a Trigger on the app. Zapier will use polling to watch for new records
   list: {
     display: {
-      label: 'New Task Type',
-      description: 'Trigger when a new task type is added.',
+      label: 'New Item Type',
+      description: 'Trigger when a new item type is added.',
     },
     operation: {
       inputFields: [
@@ -102,7 +102,7 @@ module.exports = {
           helpText: 'Explain what style of cuisine this is.',
         },
       ],
-      perform: listTaskTypes,
+      perform: listItemTypes,
       sample: sample,
     },
   },
@@ -115,24 +115,24 @@ module.exports = {
   // The create method on this resource becomes a Write on this app
   create: {
     display: {
-      label: 'Create Task Type',
-      description: 'Creates a new task type.',
+      label: 'Create Item Type',
+      description: 'Creates a new item type.',
     },
     operation: {
       inputFields: [{ key: 'name', required: false, type: 'string' }],
-      perform: createTaskType,
+      perform: createItemType,
       sample: sample,
     },
   },
   // The search method on this resource becomes a Search on this app
   search: {
     display: {
-      label: 'Find Task Types',
-      description: 'Finds existing task types by name.',
+      label: 'Find Item Types',
+      description: 'Finds existing item types by name.',
     },
     operation: {
       inputFields: [{ key: 'name', required: true, type: 'string' }],
-      perform: searchTaskTypes,
+      perform: searchItemTypes,
       sample: sample,
     },
   },

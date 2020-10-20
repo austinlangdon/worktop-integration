@@ -1,10 +1,10 @@
-const { normalizeCustomFields, getParentObjectField } = require('../utils');
+const { normalizeCustomFields } = require('../utils');
 const _sharedBaseUrl = 'https://api.worktop.io/v1';
 
-const getTask = (z, bundle) => {
+const getItem = (z, bundle) => {
   return z
     .request({
-      url: `${_sharedBaseUrl}/tasks/${bundle.inputData.id}`,
+      url: `${_sharedBaseUrl}/items/${bundle.inputData.id}`,
     })
     .then(response => {
       const item = response.data.data;
@@ -13,10 +13,10 @@ const getTask = (z, bundle) => {
     });
 };
 
-const listTasks = (z, bundle) => {
+const listItems = (z, bundle) => {
   return z
     .request({
-      url: _sharedBaseUrl + '/tasks',
+      url: _sharedBaseUrl + '/items',
       params: {
         style: bundle.inputData.style,
       },
@@ -30,12 +30,12 @@ const listTasks = (z, bundle) => {
     });
 };
 
-const createTask = (z, bundle) => {
+const createItem = (z, bundle) => {
   const requestOptions = {
-    url: _sharedBaseUrl + '/tasks',
+    url: _sharedBaseUrl + '/items',
     method: 'POST',
     body: {
-      task_type_id: bundle.inputData.task_type_id,
+      item_type_id: bundle.inputData.item_type_id,
     },
     headers: {
       'content-type': 'application/json',
@@ -49,20 +49,20 @@ const createTask = (z, bundle) => {
   });
 };
 
-const searchTask = (z, bundle) => {
+const searchItem = (z, bundle) => {
   return z
     .request({
-      url: _sharedBaseUrl + '/tasks',
+      url: _sharedBaseUrl + '/items',
       params: {
         nameSearch: bundle.inputData.name,
       },
     })
     .then(response => {
-      const matchingTasks = response.data;
+      const matchingItems = response.data;
 
-      // Only return the first matching task
-      if (matchingTasks && matchingTasks.length) {
-        return [matchingTasks[0]];
+      // Only return the first matching item
+      if (matchingItems && matchingItems.length) {
+        return [matchingItems[0]];
       }
 
       return [];
@@ -72,8 +72,10 @@ const searchTask = (z, bundle) => {
 const sample = {
   _id: '5f42ca970b98ac00c936328b',
   workspace_id: '5f1a022e5bebda0046515ffb',
+  ancestors_ids: [],
+  ancestors: [],
+  parent_id: '5f398c4e1ea233020ff9cd3c',
   account_id: '5f398c4e1ea233020ff9cd3c',
-  account_name: 'Worktop',
   assigned_user_id: '5f1a022e5bebda0046515ffa',
   assigned_user_name: 'Austin Langdon',
   attachments: [],
@@ -82,16 +84,16 @@ const sample = {
   is_communication: false,
   is_waiting: 'no',
   name: 'Follow up',
-  parent_object_id: '5f398c4e1ea233020ff9cd3c',
-  parent_object_type: 'account',
   priority: 3,
   processes: [],
+  contacts: [],
+  addresses: [],
   reserved: false,
   start_date: null,
   status_id: '5f1a022e5bebda0046516016',
   status_type: 'Active',
-  task_type_id: '5f1a022e5bebda0046515fff',
-  task_type_name: 'Task',
+  item_type_id: '5f1a022e5bebda0046515fff',
+  item_type_name: 'Item',
   is_deleted: false,
   source: 'ui',
   date_created: '2020-08-16T19:43:10.376Z',
@@ -102,34 +104,34 @@ const sample = {
 };
 
 const getCustomInputFields = async (z, bundle) => {
-  const response = await z.request(`${_sharedBaseUrl}/custom_fields?type=task`);
+  const response = await z.request(`${_sharedBaseUrl}/custom_fields`);
   return normalizeCustomFields(response.data.data);
 };
 
-// This file exports a Task resource. The definition below contains all of the keys available,
+// This file exports a Item resource. The definition below contains all of the keys available,
 // and implements the list and create methods.
 module.exports = {
-  key: 'task',
-  noun: 'Task',
+  key: 'item',
+  noun: 'Item',
   // The get method is used by Zapier to fetch a complete representation of a record. This is helpful when the HTTP
   // response from a create call only return an ID, or a search that only returns a minimuml representation of the
   // record. Zapier will follow these up with the get() to retrieve the entire object.
   get: {
     display: {
-      label: 'Get Task',
-      description: 'Gets a task.',
+      label: 'Get Item',
+      description: 'Gets a item.',
     },
     operation: {
       inputFields: [{ key: '_id', required: true }],
-      perform: getTask,
+      perform: getItem,
       sample: sample,
     },
   },
   // The list method on this resource becomes a Trigger on the app. Zapier will use polling to watch for new records
   list: {
     display: {
-      label: 'New Task',
-      description: 'Trigger when a new task is added.',
+      label: 'New Item',
+      description: 'Trigger when a new item is added.',
     },
     operation: {
       inputFields: [
@@ -139,7 +141,7 @@ module.exports = {
           helpText: 'Explain what style of cuisine this is.',
         },
       ],
-      perform: listTasks,
+      perform: listItems,
       sample: sample,
     },
   },
@@ -152,64 +154,27 @@ module.exports = {
   // The create method on this resource becomes a Write on this app
   create: {
     display: {
-      label: 'Create Task',
-      description: 'Creates a new task.',
+      label: 'Create Item',
+      description: 'Creates a new item.',
     },
     operation: {
       inputFields: [
         {
-          key: 'parent_object_type',
-          label: 'Parent Object Type',
-          required: false,
-          choices: { account: 'Account', order: 'Order', list: 'List' },
-          altersDynamicFields: true,
-          helpText: 'The object type this task is related to.',
-        },
-        function(z, bundle) {
-          if (bundle.inputData.parent_object_type === 'account') {
-            return [
-              {
-                key: 'parent_object_id',
-                label: 'Account',
-                required: true,
-                type: 'string',
-                dynamic: 'accountList._id.name',
-                helpText: 'The account this task is related to.',
-              },
-            ];
-          } else if (bundle.inputData.parent_object_type === 'order') {
-            return [
-              {
-                key: 'parent_object_id',
-                label: 'Order',
-                required: true,
-                type: 'string',
-                dynamic: 'orderList._id.name',
-                helpText: 'The order this task is related to.',
-              },
-            ];
-          } else if (bundle.inputData.parent_object_type === 'list') {
-            return [
-              {
-                key: 'parent_object_id',
-                label: 'List',
-                required: true,
-                type: 'string',
-                dynamic: 'listList._id.name',
-                helpText: 'The list this task is related to.',
-              },
-            ];
-          }
-          return [];
+          key: 'parent_id',
+          label: 'Location',
+          required: true,
+          type: 'string',
+          dynamic: 'itemList._id.name',
+          helpText: 'The location this item should be saved in.',
         },
         { key: 'name', required: false, type: 'string' },
         {
-          key: 'task_type_id',
-          label: 'Task Type',
+          key: 'item_type_id',
+          label: 'Item Type',
           required: false,
           type: 'string',
-          dynamic: 'taskTypeList._id.name',
-          helpText: 'Explain how should one make the task, step by step.',
+          dynamic: 'itemTypeList._id.name',
+          helpText: 'Explain how should one make the item, step by step.',
         },
         {
           key: 'description',
@@ -222,7 +187,7 @@ module.exports = {
           required: false,
           type: 'string',
           dynamic: 'userList._id.first_name',
-          helpText: 'Explain how should one make the task, step by step.',
+          helpText: 'Explain how should one make the item, step by step.',
         },
         {
           key: 'start_date',
@@ -236,19 +201,19 @@ module.exports = {
         },
         getCustomInputFields,
       ],
-      perform: createTask,
+      perform: createItem,
       sample: sample,
     },
   },
   // The search method on this resource becomes a Search on this app
   search: {
     display: {
-      label: 'Find Task',
-      description: 'Finds an existing task by name.',
+      label: 'Find Item',
+      description: 'Finds an existing item by name.',
     },
     operation: {
       inputFields: [{ key: 'name', required: true, type: 'string' }],
-      perform: searchTask,
+      perform: searchItem,
       sample: sample,
     },
   },
