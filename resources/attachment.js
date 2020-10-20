@@ -34,7 +34,7 @@ const createAttachment = (z, bundle) => {
     url: _sharedBaseUrl + '/attachments',
     method: 'POST',
     body: {
-      task_id: bundle.inputData.task_id,
+      item_id: bundle.inputData.item_id,
       name: bundle.inputData.name,
       url: bundle.inputData.url,
     },
@@ -134,7 +134,7 @@ module.exports = {
     },
     operation: {
       inputFields: [
-        { key: 'task_id', required: true, type: 'string' },
+        { key: 'item_id', required: true, type: 'string' },
         { key: 'name', required: false, type: 'string' },
         { key: 'url', required: true, type: 'string' },
       ],

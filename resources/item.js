@@ -35,7 +35,7 @@ const createItem = (z, bundle) => {
     url: _sharedBaseUrl + '/items',
     method: 'POST',
     body: {
-      item_type_id: bundle.inputData.item_type_id,
+      ...bundle.inputData,
     },
     headers: {
       'content-type': 'application/json',
@@ -106,10 +106,8 @@ const sample = {
 const getCustomInputFields = async (z, bundle) => {
   if (!bundle.inputData.item_type_id) return [];
 
-  const response = await z.request(
-    `${_sharedBaseUrl}/custom_fields?item_type_id=${bundle.inputData.item_type_id}`,
-  );
-  return normalizeCustomFields(response.data.data);
+  const response = await z.request(`${_sharedBaseUrl}/item_types/${bundle.inputData.item_type_id}`);
+  return normalizeCustomFields(response.data.data.custom_fields);
 };
 
 // This file exports a Item resource. The definition below contains all of the keys available,
@@ -164,6 +162,15 @@ module.exports = {
     operation: {
       inputFields: [
         {
+          key: 'item_type_id',
+          label: 'Item Type',
+          required: true,
+          type: 'string',
+          dynamic: 'itemTypeList._id.name',
+          helpText: 'Explain how should one make the item, step by step.',
+          altersDynamicFields: true,
+        },
+        {
           key: 'parent_id',
           label: 'Location',
           required: true,
@@ -171,38 +178,35 @@ module.exports = {
           dynamic: 'itemList._id.name',
           helpText: 'The location this item should be saved in.',
         },
-        { key: 'name', required: false, type: 'string' },
-        {
-          key: 'item_type_id',
-          label: 'Item Type',
-          required: false,
-          type: 'string',
-          dynamic: 'itemTypeList._id.name',
-          helpText: 'Explain how should one make the item, step by step.',
-          altersDynamicFields: true,
-        },
-        {
-          key: 'description',
-          required: false,
-          type: 'text',
-        },
-        {
-          key: 'user_id',
-          label: 'Assignee',
-          required: false,
-          type: 'string',
-          dynamic: 'userList._id.first_name',
-          helpText: 'Explain how should one make the item, step by step.',
-        },
-        {
-          key: 'start_date',
-          required: false,
-          type: 'datetime',
-        },
-        {
-          key: 'due_date',
-          required: false,
-          type: 'datetime',
+        function(z, bundle) {
+          if (bundle.inputData.item_type_id) {
+            return [
+              { key: 'name', required: false, type: 'string' },
+              {
+                key: 'description',
+                required: false,
+                type: 'text',
+              },
+              {
+                key: 'user_id',
+                label: 'Assignee',
+                required: false,
+                type: 'string',
+                dynamic: 'userList._id.first_name',
+                helpText: 'Explain how should one make the item, step by step.',
+              },
+              {
+                key: 'start_date',
+                required: false,
+                type: 'datetime',
+              },
+              {
+                key: 'due_date',
+                required: false,
+                type: 'datetime',
+              },
+            ];
+          }
         },
         getCustomInputFields,
       ],

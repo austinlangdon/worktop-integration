@@ -31,49 +31,12 @@ module.exports = {
         helpText: 'Pick a item to update.',
       },
       {
-        key: 'parent_object_type',
-        label: 'Parent Object Type',
+        key: 'parent_id',
+        label: 'Location',
         required: false,
-        choices: { account: 'Account', order: 'Order', list: 'List' },
-        altersDynamicFields: true,
-        helpText: 'The object type this item is related to.',
-      },
-      function(z, bundle) {
-        if (bundle.inputData.parent_object_type === 'account') {
-          return [
-            {
-              key: 'parent_object_id',
-              label: 'Account',
-              required: true,
-              type: 'string',
-              dynamic: 'accountList._id.name',
-              helpText: 'The account this item is related to.',
-            },
-          ];
-        } else if (bundle.inputData.parent_object_type === 'order') {
-          return [
-            {
-              key: 'parent_object_id',
-              label: 'Order',
-              required: true,
-              type: 'string',
-              dynamic: 'orderList._id.name',
-              helpText: 'The order this item is related to.',
-            },
-          ];
-        } else if (bundle.inputData.parent_object_type === 'list') {
-          return [
-            {
-              key: 'parent_object_id',
-              label: 'List',
-              required: true,
-              type: 'string',
-              dynamic: 'listList._id.name',
-              helpText: 'The list this item is related to.',
-            },
-          ];
-        }
-        return [];
+        type: 'string',
+        dynamic: 'itemList._id.name',
+        helpText: 'The location this item should be saved in.',
       },
       { key: 'name', required: false, type: 'string' },
       {
@@ -112,20 +75,12 @@ module.exports = {
     perform: (z, bundle) => {
       const promise = z.request({
         url: `${_sharedBaseUrl}/items/${bundle.inputData.item_id}`,
-        method: 'POST',
+        method: 'PUT',
         body: {
-          name: bundle.inputData.name,
-          directions: bundle.inputData.directions,
-          authorId: bundle.inputData.authorId,
-          style: bundle.inputData.style,
+          ...bundle.inputData,
         },
         headers: {
           'content-type': 'application/json',
-
-          // This is NOT how you normally do authentication. This is just to demo how to write a create here.
-          // Refer to this doc to set up authentication:
-          // https://zapier.github.io/zapier-platform-cli/#authentication
-          'X-API-Key': 'secret',
         },
       });
 
