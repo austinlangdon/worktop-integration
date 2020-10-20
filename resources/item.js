@@ -179,6 +179,7 @@ module.exports = {
           type: 'string',
           dynamic: 'itemTypeList._id.name',
           helpText: 'Explain how should one make the item, step by step.',
+          altersDynamicFields: true,
         },
         {
           key: 'description',
@@ -190,7 +191,7 @@ module.exports = {
           label: 'Assignee',
           required: false,
           type: 'string',
-          dynamic: 'userList._id.full_name',
+          dynamic: 'userList._id.first_name',
           helpText: 'Explain how should one make the item, step by step.',
         },
         {
