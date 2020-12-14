@@ -17,6 +17,9 @@ zapier register "App Title"
 # Or you can link to an existing integration on Zapier
 zapier link
 
+# Create new build
+zapier build
+
 # Push it to Zapier
 zapier push
 ```
