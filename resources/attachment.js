@@ -31,10 +31,9 @@ const listAttachments = (z, bundle) => {
 
 const createAttachment = (z, bundle) => {
   const requestOptions = {
-    url: _sharedBaseUrl + '/attachments',
+    url: `${_sharedBaseUrl}/items/${bundle.inputData.item_id}/attachments`,
     method: 'POST',
     body: {
-      item_id: bundle.inputData.item_id,
       name: bundle.inputData.name,
       url: bundle.inputData.url,
     },
