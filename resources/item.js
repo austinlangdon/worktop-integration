@@ -17,9 +17,7 @@ const listItems = (z, bundle) => {
   return z
     .request({
       url: _sharedBaseUrl + '/items',
-      params: {
-        style: bundle.inputData.style,
-      },
+      params: {},
     })
     .then(response => {
       const items = response.data.data;
@@ -204,6 +202,32 @@ module.exports = {
                 key: 'due_date',
                 required: false,
                 type: 'datetime',
+              },
+              {
+                key: 'waiting_step_id',
+                label: 'Waiting Step ID',
+                required: false,
+                type: 'boolean',
+              },
+              {
+                key: 'waiting_step_id',
+                label: 'Waiting Step ID',
+                required: false,
+                type: 'boolean',
+              },
+              {
+                key: 'dependents',
+                label: 'Dependents',
+                required: false,
+                type: 'string',
+                list: true,
+              },
+              {
+                key: 'dependencies',
+                label: 'Dependencies',
+                required: false,
+                type: 'string',
+                list: true,
               },
             ];
           }

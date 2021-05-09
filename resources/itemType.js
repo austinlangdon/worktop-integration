@@ -11,10 +11,8 @@ const getItemType = (z, bundle) => {
 const listItemTypes = (z, bundle) => {
   return z
     .request({
-      url: _sharedBaseUrl + '/item_types',
-      params: {
-        style: bundle.inputData.style,
-      },
+      url: _sharedBaseUrl + '/item_types?status=final',
+      params: {},
     })
     .then(response => {
       const items = response.data.data;
