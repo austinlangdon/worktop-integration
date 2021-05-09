@@ -173,7 +173,6 @@ module.exports = {
           label: 'Location',
           required: true,
           type: 'string',
-          dynamic: 'itemList._id.name',
           helpText: 'The location this item should be saved in.',
         },
         function(z, bundle) {
@@ -207,13 +206,7 @@ module.exports = {
                 key: 'waiting_step_id',
                 label: 'Waiting Step ID',
                 required: false,
-                type: 'boolean',
-              },
-              {
-                key: 'waiting_step_id',
-                label: 'Waiting Step ID',
-                required: false,
-                type: 'boolean',
+                type: 'string',
               },
               {
                 key: 'dependents',
