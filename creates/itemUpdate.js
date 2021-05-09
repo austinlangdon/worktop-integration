@@ -1,4 +1,4 @@
-const _sharedBaseUrl = 'https://api.worktop.io/v1';
+const _sharedBaseUrl = 'https://api-staging.worktop.io/v1';
 const { normalizeCustomFields } = require('../utils');
 
 const getCustomInputFields = async (z, bundle) => {

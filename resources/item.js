@@ -1,5 +1,5 @@
 const { normalizeCustomFields } = require('../utils');
-const _sharedBaseUrl = 'https://api.worktop.io/v1';
+const _sharedBaseUrl = 'https://api-staging.worktop.io/v1';
 
 const getItem = (z, bundle) => {
   return z
@@ -203,8 +203,8 @@ module.exports = {
                 type: 'datetime',
               },
               {
-                key: 'waiting_step_id',
-                label: 'Waiting Step ID',
+                key: 'waiting_step_group_id',
+                label: 'Waiting Step Group ID',
                 required: false,
                 type: 'string',
               },

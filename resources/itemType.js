@@ -1,4 +1,4 @@
-const _sharedBaseUrl = 'https://api.worktop.io/v1';
+const _sharedBaseUrl = 'https://api-staging.worktop.io/v1';
 
 const getItemType = (z, bundle) => {
   return z
