@@ -1,17 +1,17 @@
 const _sharedBaseUrl = 'https://api-staging.worktop.io/v1';
 
-const getItemType = (z, bundle) => {
+const getTemplate = (z, bundle) => {
   return z
     .request({
-      url: `${_sharedBaseUrl}/item_types/${bundle.inputData.id}`,
+      url: `${_sharedBaseUrl}/templates/${bundle.inputData.id}`,
     })
     .then(response => response.data);
 };
 
-const listItemTypes = (z, bundle) => {
+const listTemplates = (z, bundle) => {
   return z
     .request({
-      url: _sharedBaseUrl + '/item_types?status=final',
+      url: _sharedBaseUrl + '/templates?status=final',
       params: {},
     })
     .then(response => {
@@ -23,12 +23,12 @@ const listItemTypes = (z, bundle) => {
     });
 };
 
-const createItemType = (z, bundle) => {
+const createTemplate = (z, bundle) => {
   const requestOptions = {
-    url: _sharedBaseUrl + '/item_types',
+    url: _sharedBaseUrl + '/templates',
     method: 'POST',
     body: {
-      item_type_id: bundle.inputData.item_type_id,
+      template_id: bundle.inputData.template_id,
     },
     headers: {
       'content-type': 'application/json',
@@ -38,10 +38,10 @@ const createItemType = (z, bundle) => {
   return z.request(requestOptions).then(response => response.data);
 };
 
-const searchItemTypes = (z, bundle) => {
+const searchTemplates = (z, bundle) => {
   return z
     .request({
-      url: _sharedBaseUrl + '/item_types',
+      url: _sharedBaseUrl + '/templates',
       params: {
         nameSearch: bundle.inputData.name,
       },
@@ -70,27 +70,27 @@ const sample = {
 // This file exports a Item resource. The definition below contains all of the keys available,
 // and implements the list and create methods.
 module.exports = {
-  key: 'itemType',
-  noun: 'Item Type',
+  key: 'template',
+  noun: 'Template',
   // The get method is used by Zapier to fetch a complete representation of a record. This is helpful when the HTTP
   // response from a create call only return an ID, or a search that only returns a minimuml representation of the
   // record. Zapier will follow these up with the get() to retrieve the entire object.
   get: {
     display: {
-      label: 'Get Item Type',
-      description: 'Gets a item type.',
+      label: 'Get Template',
+      description: 'Gets a template.',
     },
     operation: {
       inputFields: [{ key: 'id', required: true }],
-      perform: getItemType,
+      perform: getTemplate,
       sample: sample,
     },
   },
   // The list method on this resource becomes a Trigger on the app. Zapier will use polling to watch for new records
   list: {
     display: {
-      label: 'New Item Type',
-      description: 'Trigger when a new item type is added.',
+      label: 'New Template',
+      description: 'Trigger when a new template is added.',
     },
     operation: {
       inputFields: [
@@ -100,7 +100,7 @@ module.exports = {
           helpText: 'Explain what style of cuisine this is.',
         },
       ],
-      perform: listItemTypes,
+      perform: listTemplates,
       sample: sample,
     },
   },
@@ -113,24 +113,24 @@ module.exports = {
   // The create method on this resource becomes a Write on this app
   create: {
     display: {
-      label: 'Create Item Type',
-      description: 'Creates a new item type.',
+      label: 'Create Template',
+      description: 'Creates a new template.',
     },
     operation: {
       inputFields: [{ key: 'name', required: false, type: 'string' }],
-      perform: createItemType,
+      perform: createTemplate,
       sample: sample,
     },
   },
   // The search method on this resource becomes a Search on this app
   search: {
     display: {
-      label: 'Find Item Types',
-      description: 'Finds existing item types by name.',
+      label: 'Find Templates',
+      description: 'Finds existing templates by name.',
     },
     operation: {
       inputFields: [{ key: 'name', required: true, type: 'string' }],
-      perform: searchItemTypes,
+      perform: searchTemplates,
       sample: sample,
     },
   },

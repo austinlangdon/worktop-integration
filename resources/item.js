@@ -28,11 +28,12 @@ const listItems = (z, bundle) => {
     });
 };
 
-const createItem = (z, bundle) => {
+const createTask = (z, bundle) => {
   const requestOptions = {
     url: _sharedBaseUrl + '/items',
     method: 'POST',
     body: {
+      type: 'task',
       ...bundle.inputData,
     },
     headers: {
@@ -90,8 +91,8 @@ const sample = {
   start_date: null,
   status_id: '5f1a022e5bebda0046516016',
   status_type: 'Active',
-  item_type_id: '5f1a022e5bebda0046515fff',
-  item_type_name: 'Item',
+  template_id: '5f1a022e5bebda0046515fff',
+  template_name: 'Item',
   is_deleted: false,
   source: 'ui',
   date_created: '2020-08-16T19:43:10.376Z',
@@ -102,9 +103,9 @@ const sample = {
 };
 
 const getCustomInputFields = async (z, bundle) => {
-  if (!bundle.inputData.item_type_id) return [];
+  if (!bundle.inputData.template_id) return [];
 
-  const response = await z.request(`${_sharedBaseUrl}/item_types/${bundle.inputData.item_type_id}`);
+  const response = await z.request(`${_sharedBaseUrl}/templates/${bundle.inputData.template_id}`);
   return normalizeCustomFields(response.data.data.custom_fields);
 };
 
@@ -130,7 +131,7 @@ module.exports = {
   // The list method on this resource becomes a Trigger on the app. Zapier will use polling to watch for new records
   list: {
     display: {
-      label: 'New Item',
+      label: 'New Task',
       description: 'Trigger when a new item is added.',
     },
     operation: {
@@ -154,17 +155,17 @@ module.exports = {
   // The create method on this resource becomes a Write on this app
   create: {
     display: {
-      label: 'Create Item',
-      description: 'Creates a new item.',
+      label: 'Create Task',
+      description: 'Creates a new task.',
     },
     operation: {
       inputFields: [
         {
-          key: 'item_type_id',
-          label: 'Item Type',
-          required: true,
+          key: 'template_id',
+          label: 'Template',
+          required: false,
           type: 'string',
-          dynamic: 'itemTypeList._id.name',
+          dynamic: 'templateList._id.name',
           helpText: 'Explain how should one make the item, step by step.',
           altersDynamicFields: true,
         },
@@ -176,7 +177,7 @@ module.exports = {
           helpText: 'The location this item should be saved in.',
         },
         function(z, bundle) {
-          if (bundle.inputData.item_type_id) {
+          if (bundle.inputData.template_id) {
             return [
               { key: 'name', required: false, type: 'string' },
               {
@@ -203,10 +204,11 @@ module.exports = {
                 type: 'datetime',
               },
               {
-                key: 'waiting_step_group_id',
-                label: 'Waiting Step Group ID',
+                key: 'dependant_steps',
+                label: 'Dependant Steps',
                 required: false,
                 type: 'string',
+                list: true,
               },
               {
                 key: 'dependents',
@@ -227,7 +229,7 @@ module.exports = {
         },
         getCustomInputFields,
       ],
-      perform: createItem,
+      perform: createTask,
       sample: sample,
     },
   },

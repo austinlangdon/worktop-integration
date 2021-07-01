@@ -2,7 +2,7 @@ const { config: authentication, befores = [], afters = [] } = require('./authent
 
 // resources
 const Item = require('./resources/item');
-const ItemType = require('./resources/itemType');
+const Template = require('./resources/template');
 const User = require('./resources/user');
 const Attachment = require('./resources/attachment');
 const itemUpdate = require('./creates/itemUpdate');
@@ -34,7 +34,7 @@ module.exports = {
 
   resources: {
     [Item.key]: Item,
-    [ItemType.key]: ItemType,
+    [Template.key]: Template,
     [User.key]: User,
     [Attachment.key]: Attachment,
   },
