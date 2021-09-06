@@ -22,7 +22,7 @@ const normalizeCustomFields = async customFields => {
     }
 
     const inputField = {
-      key: `custom:${field._id}`,
+      key: `fields.${field._id}`,
       label: field.name,
       required: false,
       helpText: 'This is a custom field',

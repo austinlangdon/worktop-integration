@@ -176,56 +176,50 @@ module.exports = {
           type: 'string',
           helpText: 'The location this item should be saved in.',
         },
-        function(z, bundle) {
-          if (bundle.inputData.template_id) {
-            return [
-              { key: 'name', required: false, type: 'string' },
-              {
-                key: 'description',
-                required: false,
-                type: 'text',
-              },
-              {
-                key: 'user_id',
-                label: 'Assignee',
-                required: false,
-                type: 'string',
-                dynamic: 'userList._id.first_name',
-                helpText: 'Explain how should one make the item, step by step.',
-              },
-              {
-                key: 'start_date',
-                required: false,
-                type: 'datetime',
-              },
-              {
-                key: 'due_date',
-                required: false,
-                type: 'datetime',
-              },
-              {
-                key: 'dependant_steps',
-                label: 'Dependant Steps',
-                required: false,
-                type: 'string',
-                list: true,
-              },
-              {
-                key: 'dependents',
-                label: 'Dependents',
-                required: false,
-                type: 'string',
-                list: true,
-              },
-              {
-                key: 'dependencies',
-                label: 'Dependencies',
-                required: false,
-                type: 'string',
-                list: true,
-              },
-            ];
-          }
+        { key: 'name', required: false, type: 'string' },
+        {
+          key: 'description',
+          required: false,
+          type: 'text',
+        },
+        {
+          key: 'user_id',
+          label: 'Assignee',
+          required: false,
+          type: 'string',
+          dynamic: 'userList._id.first_name',
+          helpText: 'Explain how should one make the item, step by step.',
+        },
+        {
+          key: 'start_date',
+          required: false,
+          type: 'datetime',
+        },
+        {
+          key: 'due_date',
+          required: false,
+          type: 'datetime',
+        },
+        {
+          key: 'dependant_steps',
+          label: 'Dependant Steps',
+          required: false,
+          type: 'string',
+          list: true,
+        },
+        {
+          key: 'dependents',
+          label: 'Dependents',
+          required: false,
+          type: 'string',
+          list: true,
+        },
+        {
+          key: 'dependencies',
+          label: 'Dependencies',
+          required: false,
+          type: 'string',
+          list: true,
         },
         getCustomInputFields,
       ],
